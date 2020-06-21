@@ -1,0 +1,70 @@
+apiVersion: skaffold/v2beta5
+kind: Config
+metadata:
+  name: numbers-app
+build:
+  artifacts:
+  - image: numbers-be
+    context: numbers-be
+  - image: numbers-fe
+    context: numbers-fe
+
+profiles:
+  - name: development
+    deploy:
+      helm:
+        releases:
+        - name: numbers-be
+          chartPath: manifest/numbers-be/charts
+          artifactOverrides:
+            image: numbers-be
+          setValueTemplates:
+            environment: development
+        - name: numbers-fe
+          chartPath: manifest/numbers-fe/charts
+          artifactOverrides:
+            image: numbers-fe
+          setValueTemplates:
+            environment: development
+  - name: staging
+    deploy:
+      helm:
+        releases:
+        - name: numbers-be
+          chartPath: manifest/numbers-be/charts
+          artifactOverrides:
+            image: numbers-be
+          setValueTemplates:
+            environment: staging
+            minReplicas: 2
+            maxReplicas: 2
+        - name: numbers-fe
+          chartPath: manifest/numbers-fe/charts
+          artifactOverrides:
+            image: numbers-fe
+          setValueTemplates:
+            environment: staging
+            minReplicas: 2
+            maxReplicas: 2
+  - name: production
+    deploy:
+      helm:
+        releases:
+        - name: numbers-be
+          chartPath: manifest/numbers-be/charts
+          artifactOverrides:
+            image: numbers-be
+          setValueTemplates:
+            environment: production
+            minReplicas: 2
+            maxReplicas: 4
+            averageUtilization: 50
+        - name: numbers-fe
+          chartPath: manifest/numbers-fe/charts
+          artifactOverrides:
+            image: numbers-fe
+          setValueTemplates:
+            environment: production
+            minReplicas: 2
+            maxReplicas: 4
+            averageUtilization: 50

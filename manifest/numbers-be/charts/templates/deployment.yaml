@@ -1,0 +1,54 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.environment }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-{{ .Values.environment }}
+  minReplicas: {{ .Values.minReplicas }}
+  maxReplicas: {{ .Values.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.averageUtilization }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.environment }}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.environment }}
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ .Release.Name }}-{{ .Values.environment }}
+  ports:
+    - protocol: TCP
+      port: 1323
+      targetPort: 1323
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.environment }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  #replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.environment }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.environment }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-{{ .Values.environment }}
+        image: {{ .Values.image }}
