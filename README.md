@@ -104,6 +104,10 @@ curl -s -XPOST -u kita:bisa localhost:1323/numbersapi/23 | jq .
 {"message":"Method Not Allowed"}
 ```
 
+## Important Notes
+
+This project only tested on docker-for-desktop, if you wanted to use it on real k8s cluster. Please modify the artifact image in skaffold. The images need to be pushed to registry and pulled by your pod.
+
 ## Source
 
 - <https://skaffold.dev/>
