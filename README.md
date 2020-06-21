@@ -92,7 +92,7 @@ curl -s -XPOST -u kita:bisa localhost:1323/numbersapi/23 | jq .
 {"message":"Unauthorized"}
 ```
 
-404 (Not fFund)
+404 (Not Found)
 
 ```json
 {"message":"Not Found"}
