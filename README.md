@@ -75,7 +75,7 @@ And when you stop the process, it will automatically cleanup everything.
 Test the API using this command :
 
 ```shell
-curl -s -XPOST -u kita:bisa localhost:1323/numbersapi/23 | jq .
+curl -s -XPOST -u dora:emon localhost:1323/numbersapi/23 | jq .
 ```
 
 ### API responses
